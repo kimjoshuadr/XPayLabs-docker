@@ -1,0 +1,17 @@
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --no-audit --no-fund
+COPY . .
+RUN echo "VITE_APP_ENV=production" > .env.production && \
+    echo "VITE_APP_TITLE=Merchant Console" >> .env.production && \
+    echo "VITE_APP_BASE_API=/prod-api" >> .env.production && \
+    echo "VITE_APP_ENCRYPT=true" >> .env.production && \
+    echo "VITE_APP_RSA_PUBLIC_KEY=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKoR8mX0rGKLqzcWmOzbfj64K8ZIgOdHnzkXSOVOZbFu/TJhZ7rFAN+eaGkl3C4buccQd/EjEsj9ir7ijT7h96MCAwEAAQ==" >> .env.production && \
+    echo "VITE_APP_RSA_PRIVATE_KEY=MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAmc3CuPiGL/LcIIm7zryCEIbl1SPzBkr75E2VMtxegyZ1lYRD+7TZGAPkvIsBcaMs6Nsy0L78n2qh+lIZMpLH8wIDAQABAkEAk82Mhz0tlv6IVCyIcw/s3f0E+WLmtPFyR9/WtV3Y5aaejUkU60JpX4m5xNR2VaqOLTZAYjW8Wy0aXr3zYIhhQQIhAMfqR9oFdYw1J9SsNc+CrhugAvKTi0+BF6VoL6psWhvbAiEAxPPNTmrkmrXwdm/pQQu3UOQmc2vCZ5tiKpW10CgJi8kCIFGkL6utxw93Ncj4exE/gPLvKcT+1Emnoox+O9kRXss5AiAMtYLJDaLEzPrAWcZeeSgSIzbL+ecokmFKSDDcRske6QIgSMkHedwND1olF8vlKsJUGK3BcdtM8w4Xq7BpSBwsloE=" >> .env.production && \
+    echo "VITE_APP_CLIENT_ID=e5cd7e4891bf95d1d19206ce24a7b32e" >> .env.production && \
+    echo "VITE_XPAY_BASE_URL=/api" >> .env.production && \
+    npm run build:prod
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
