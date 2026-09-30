@@ -8,6 +8,7 @@ x-common-env: &common-env
   redis_password: ${REDIS_PASSWORD}
   XPAYLABS_SKIP_SIGN_SECRET: ${SKIP_SIGN_SECRET}
   XPAY_PAY_DOMAIN: ${XPAY_PAY_DOMAIN}
+  XPAY_CRYPTO_MASTER_KEY: ${XPAY_CRYPTO_MASTER_KEY}
   XPAY_API_DOMAIN: ${XPAY_API_DOMAIN}
 
 services:
@@ -53,7 +54,10 @@ services:
       - xpay-network
 
   xpay-tron:
-    image: ghcr.io/yan253319066/xpay-java
+    build:
+      context: https://github.com/kimjoshuadr/XPayLabs-java.git#main
+      dockerfile: Dockerfile
+    image: xpay-java:local
     container_name: xpay-tron
     command: java -jar XPayLabs-tron.jar
     environment:
@@ -81,7 +85,7 @@ services:
       - xpay-network
 
   xpay-sui:
-    image: ghcr.io/yan253319066/xpay-java
+    image: xpay-java:local
     container_name: xpay-sui
     command: java -jar XPayLabs-sui.jar
     environment:
@@ -101,7 +105,7 @@ services:
       - xpay-network
 
   xpay-eth:
-    image: ghcr.io/yan253319066/xpay-java
+    image: xpay-java:local
     container_name: xpay-eth
     command: java -jar XPayLabs-eth.jar
     environment:
@@ -135,7 +139,7 @@ services:
       - xpay-network
 
   xpay-user:
-    image: ghcr.io/yan253319066/xpay-java
+    image: xpay-java:local
     container_name: xpay-user
     command: java -jar XPayLabs.jar
     environment:
@@ -155,7 +159,7 @@ services:
       - xpay-network
 
   xpay-merchant:
-    image: ghcr.io/yan253319066/xpay-java
+    image: xpay-java:local
     container_name: xpay-merchant
     command: java -jar XPayLabs-merchant.jar
     environment:
