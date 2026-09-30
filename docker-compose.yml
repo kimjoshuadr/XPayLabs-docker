@@ -37,7 +37,10 @@ services:
       - xpay-network
 
   sui-node-service:
-    image: ghcr.io/yan253319066/sui-node-service
+    build:
+      context: ./sui-node
+      dockerfile: Dockerfile
+    image: xpay-sui-node:local
     container_name: xpay-sui-node
     environment:
       PORT: "3001"
@@ -204,6 +207,20 @@ services:
     depends_on:
       - merchant-vue
       - checkout
+    networks:
+      - xpay-network
+
+  db-i18n:
+    image: mysql:8.0
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
+    environment:
+      MYSQL_PWD: ${MYSQL_ROOT_PASSWORD}
+    command: ["sh","-c","mysql -hmysql -uroot xpaylabs < /i18n.sql"]
+    volumes:
+      - ./sql/i18n.sql:/i18n.sql:ro
     networks:
       - xpay-network
 
