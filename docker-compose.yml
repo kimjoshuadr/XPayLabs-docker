@@ -13,6 +13,8 @@ x-common-env: &common-env
 services:
   mysql:
     image: mysql:8.0
+    ports:
+      - "23306:3306"
     container_name: xpay-mysql
     environment:
       MYSQL_DATABASE: xpaylabs
