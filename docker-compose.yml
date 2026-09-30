@@ -13,8 +13,6 @@ x-common-env: &common-env
 services:
   mysql:
     image: mysql:8.0
-    ports:
-      - "23306:3306"
     container_name: xpay-mysql
     environment:
       MYSQL_DATABASE: xpaylabs
@@ -209,18 +207,6 @@ services:
     depends_on:
       - merchant-vue
       - checkout
-    networks:
-      - xpay-network
-
-  db-i18n:
-    image: mysql:8.0
-    depends_on:
-      mysql:
-        condition: service_healthy
-    restart: "no"
-    environment:
-      MYSQL_PWD: ${MYSQL_ROOT_PASSWORD}
-    command: ["sh","-c","echo '' | base64 -d | mysql -hmysql -uroot xpaylabs && echo I18N_APPLIED"]
     networks:
       - xpay-network
 
